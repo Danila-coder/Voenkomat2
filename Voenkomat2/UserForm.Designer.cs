@@ -63,15 +63,30 @@
             tabControl1 = new TabControl();
             tabPage1 = new TabPage();
             tabPage2 = new TabPage();
+            label11 = new Label();
+            comboBoxExamType = new ComboBox();
             label16 = new Label();
             label15 = new Label();
+            buttonAddExam = new Button();
             label14 = new Label();
             textBoxResult = new TextBox();
-            buttonAddExam = new Button();
             dateTimePickerExamDate = new DateTimePicker();
             comboBoxDoctor = new ComboBox();
             dataGridView3 = new DataGridView();
             tabPage3 = new TabPage();
+            buttonSaveMilitaryService = new Button();
+            label20 = new Label();
+            label19 = new Label();
+            label18 = new Label();
+            label17 = new Label();
+            label13 = new Label();
+            buttonAddMilitaryService = new Button();
+            comboBoxStatus = new ComboBox();
+            comboBoxRank = new ComboBox();
+            textBoxSubdivision = new TextBox();
+            dateTimePickerEnd = new DateTimePicker();
+            dateTimePickerStart = new DateTimePicker();
+            dataGridView4 = new DataGridView();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dataGridView2).BeginInit();
             panel1.SuspendLayout();
@@ -81,6 +96,8 @@
             tabPage1.SuspendLayout();
             tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView3).BeginInit();
+            tabPage3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dataGridView4).BeginInit();
             SuspendLayout();
             // 
             // dataGridView1
@@ -238,7 +255,7 @@
             // 
             buttonSearch.Location = new Point(3, 60);
             buttonSearch.Name = "buttonSearch";
-            buttonSearch.Size = new Size(94, 29);
+            buttonSearch.Size = new Size(124, 29);
             buttonSearch.TabIndex = 18;
             buttonSearch.Text = "Искать";
             buttonSearch.UseVisualStyleBackColor = true;
@@ -246,9 +263,9 @@
             // 
             // buttonClearFilter
             // 
-            buttonClearFilter.Location = new Point(103, 60);
+            buttonClearFilter.Location = new Point(133, 60);
             buttonClearFilter.Name = "buttonClearFilter";
-            buttonClearFilter.Size = new Size(94, 29);
+            buttonClearFilter.Size = new Size(124, 29);
             buttonClearFilter.TabIndex = 19;
             buttonClearFilter.Text = "Сброс";
             buttonClearFilter.UseVisualStyleBackColor = true;
@@ -268,18 +285,18 @@
             // 
             dataGridView2.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dataGridView2.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView2.Location = new Point(6, 6);
+            dataGridView2.Location = new Point(3, 3);
             dataGridView2.Name = "dataGridView2";
             dataGridView2.RowHeadersWidth = 51;
-            dataGridView2.Size = new Size(568, 539);
+            dataGridView2.Size = new Size(683, 595);
             dataGridView2.TabIndex = 21;
             // 
             // comboBox3
             // 
             comboBox3.FormattingEnabled = true;
-            comboBox3.Location = new Point(6, 571);
+            comboBox3.Location = new Point(382, 624);
             comboBox3.Name = "comboBox3";
-            comboBox3.Size = new Size(182, 28);
+            comboBox3.Size = new Size(174, 28);
             comboBox3.TabIndex = 22;
             // 
             // dateTimePicker2
@@ -291,16 +308,16 @@
             // 
             // dateTimePicker3
             // 
-            dateTimePicker3.Location = new Point(215, 572);
+            dateTimePicker3.Location = new Point(194, 625);
             dateTimePicker3.Name = "dateTimePicker3";
             dateTimePicker3.Size = new Size(182, 27);
             dateTimePicker3.TabIndex = 24;
             // 
             // buttonAddDeferment
             // 
-            buttonAddDeferment.Location = new Point(403, 623);
+            buttonAddDeferment.Location = new Point(562, 604);
             buttonAddDeferment.Name = "buttonAddDeferment";
-            buttonAddDeferment.Size = new Size(124, 29);
+            buttonAddDeferment.Size = new Size(124, 48);
             buttonAddDeferment.TabIndex = 26;
             buttonAddDeferment.Text = "Создать";
             buttonAddDeferment.UseVisualStyleBackColor = true;
@@ -318,7 +335,7 @@
             // label10
             // 
             label10.AutoSize = true;
-            label10.Location = new Point(215, 548);
+            label10.Location = new Point(194, 601);
             label10.Name = "label10";
             label10.Size = new Size(121, 20);
             label10.TabIndex = 28;
@@ -327,7 +344,7 @@
             // label12
             // 
             label12.AutoSize = true;
-            label12.Location = new Point(6, 548);
+            label12.Location = new Point(382, 601);
             label12.Name = "label12";
             label12.Size = new Size(87, 20);
             label12.TabIndex = 30;
@@ -375,9 +392,9 @@
             // 
             panel3.BorderStyle = BorderStyle.Fixed3D;
             panel3.Controls.Add(tabControl1);
-            panel3.Location = new Point(983, 12);
+            panel3.Location = new Point(985, 12);
             panel3.Name = "panel3";
-            panel3.Size = new Size(596, 701);
+            panel3.Size = new Size(710, 701);
             panel3.TabIndex = 32;
             // 
             // tabControl1
@@ -388,7 +405,7 @@
             tabControl1.Location = new Point(3, 3);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(586, 691);
+            tabControl1.Size = new Size(700, 691);
             tabControl1.TabIndex = 33;
             // 
             // tabPage1
@@ -404,33 +421,52 @@
             tabPage1.Location = new Point(4, 29);
             tabPage1.Name = "tabPage1";
             tabPage1.Padding = new Padding(3);
-            tabPage1.Size = new Size(578, 658);
+            tabPage1.Size = new Size(692, 658);
             tabPage1.TabIndex = 0;
             tabPage1.Text = "Отсрочки";
             tabPage1.UseVisualStyleBackColor = true;
             // 
             // tabPage2
             // 
+            tabPage2.Controls.Add(label11);
+            tabPage2.Controls.Add(comboBoxExamType);
             tabPage2.Controls.Add(label16);
             tabPage2.Controls.Add(label15);
+            tabPage2.Controls.Add(buttonAddExam);
             tabPage2.Controls.Add(label14);
             tabPage2.Controls.Add(textBoxResult);
-            tabPage2.Controls.Add(buttonAddExam);
             tabPage2.Controls.Add(dateTimePickerExamDate);
             tabPage2.Controls.Add(comboBoxDoctor);
             tabPage2.Controls.Add(dataGridView3);
             tabPage2.Location = new Point(4, 29);
             tabPage2.Name = "tabPage2";
             tabPage2.Padding = new Padding(3);
-            tabPage2.Size = new Size(578, 658);
+            tabPage2.Size = new Size(692, 658);
             tabPage2.TabIndex = 1;
             tabPage2.Text = "Медосмотры";
             tabPage2.UseVisualStyleBackColor = true;
             // 
+            // label11
+            // 
+            label11.AutoSize = true;
+            label11.Location = new Point(6, 549);
+            label11.Name = "label11";
+            label11.Size = new Size(98, 20);
+            label11.TabIndex = 32;
+            label11.Text = "Вид осмотра";
+            // 
+            // comboBoxExamType
+            // 
+            comboBoxExamType.FormattingEnabled = true;
+            comboBoxExamType.Location = new Point(6, 571);
+            comboBoxExamType.Name = "comboBoxExamType";
+            comboBoxExamType.Size = new Size(250, 28);
+            comboBoxExamType.TabIndex = 31;
+            // 
             // label16
             // 
             label16.AutoSize = true;
-            label16.Location = new Point(6, 548);
+            label16.Location = new Point(289, 549);
             label16.Name = "label16";
             label16.Size = new Size(75, 20);
             label16.TabIndex = 9;
@@ -439,16 +475,26 @@
             // label15
             // 
             label15.AutoSize = true;
-            label15.Location = new Point(6, 601);
+            label15.Location = new Point(289, 601);
             label15.Name = "label15";
             label15.Size = new Size(43, 20);
             label15.TabIndex = 8;
             label15.Text = "Врач";
             // 
+            // buttonAddExam
+            // 
+            buttonAddExam.Location = new Point(562, 604);
+            buttonAddExam.Name = "buttonAddExam";
+            buttonAddExam.Size = new Size(124, 48);
+            buttonAddExam.TabIndex = 1;
+            buttonAddExam.Text = "Создать";
+            buttonAddExam.UseVisualStyleBackColor = true;
+            buttonAddExam.Click += buttonAddExam_Click;
+            // 
             // label14
             // 
             label14.AutoSize = true;
-            label14.Location = new Point(6, 495);
+            label14.Location = new Point(9, 602);
             label14.Name = "label14";
             label14.Size = new Size(104, 20);
             label14.TabIndex = 7;
@@ -456,24 +502,14 @@
             // 
             // textBoxResult
             // 
-            textBoxResult.Location = new Point(6, 571);
+            textBoxResult.Location = new Point(289, 572);
             textBoxResult.Name = "textBoxResult";
             textBoxResult.Size = new Size(250, 27);
             textBoxResult.TabIndex = 5;
             // 
-            // buttonAddExam
-            // 
-            buttonAddExam.Location = new Point(272, 623);
-            buttonAddExam.Name = "buttonAddExam";
-            buttonAddExam.Size = new Size(94, 29);
-            buttonAddExam.TabIndex = 1;
-            buttonAddExam.Text = "Создать";
-            buttonAddExam.UseVisualStyleBackColor = true;
-            buttonAddExam.Click += buttonAddExam_Click;
-            // 
             // dateTimePickerExamDate
             // 
-            dateTimePickerExamDate.Location = new Point(6, 518);
+            dateTimePickerExamDate.Location = new Point(9, 625);
             dateTimePickerExamDate.Name = "dateTimePickerExamDate";
             dateTimePickerExamDate.Size = new Size(250, 27);
             dateTimePickerExamDate.TabIndex = 4;
@@ -481,7 +517,7 @@
             // comboBoxDoctor
             // 
             comboBoxDoctor.FormattingEnabled = true;
-            comboBoxDoctor.Location = new Point(6, 624);
+            comboBoxDoctor.Location = new Point(289, 624);
             comboBoxDoctor.Name = "comboBoxDoctor";
             comboBoxDoctor.Size = new Size(250, 28);
             comboBoxDoctor.TabIndex = 3;
@@ -490,30 +526,156 @@
             // 
             dataGridView3.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dataGridView3.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView3.Location = new Point(6, 6);
+            dataGridView3.Location = new Point(3, 3);
             dataGridView3.Name = "dataGridView3";
             dataGridView3.RowHeadersWidth = 51;
-            dataGridView3.Size = new Size(566, 486);
+            dataGridView3.Size = new Size(683, 543);
             dataGridView3.TabIndex = 0;
             // 
             // tabPage3
             // 
+            tabPage3.Controls.Add(buttonSaveMilitaryService);
+            tabPage3.Controls.Add(label20);
+            tabPage3.Controls.Add(label19);
+            tabPage3.Controls.Add(label18);
+            tabPage3.Controls.Add(label17);
+            tabPage3.Controls.Add(label13);
+            tabPage3.Controls.Add(buttonAddMilitaryService);
+            tabPage3.Controls.Add(comboBoxStatus);
+            tabPage3.Controls.Add(comboBoxRank);
+            tabPage3.Controls.Add(textBoxSubdivision);
+            tabPage3.Controls.Add(dateTimePickerEnd);
+            tabPage3.Controls.Add(dateTimePickerStart);
+            tabPage3.Controls.Add(dataGridView4);
             tabPage3.Location = new Point(4, 29);
             tabPage3.Name = "tabPage3";
-            tabPage3.Size = new Size(578, 658);
+            tabPage3.Size = new Size(692, 658);
             tabPage3.TabIndex = 2;
             tabPage3.Text = "Служба";
             tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // buttonSaveMilitaryService
+            // 
+            buttonSaveMilitaryService.Location = new Point(567, 558);
+            buttonSaveMilitaryService.Name = "buttonSaveMilitaryService";
+            buttonSaveMilitaryService.Size = new Size(122, 43);
+            buttonSaveMilitaryService.TabIndex = 12;
+            buttonSaveMilitaryService.Text = "Редактировать";
+            buttonSaveMilitaryService.UseVisualStyleBackColor = true;
+            buttonSaveMilitaryService.Click += buttonSaveMilitaryService_Click;
+            // 
+            // label20
+            // 
+            label20.AutoSize = true;
+            label20.Location = new Point(463, 604);
+            label20.Name = "label20";
+            label20.Size = new Size(52, 20);
+            label20.TabIndex = 11;
+            label20.Text = "Статус";
+            // 
+            // label19
+            // 
+            label19.AutoSize = true;
+            label19.Location = new Point(235, 604);
+            label19.Name = "label19";
+            label19.Size = new Size(59, 20);
+            label19.TabIndex = 10;
+            label19.Text = "Звание";
+            // 
+            // label18
+            // 
+            label18.AutoSize = true;
+            label18.Location = new Point(235, 551);
+            label18.Name = "label18";
+            label18.Size = new Size(119, 20);
+            label18.TabIndex = 9;
+            label18.Text = "Подразделение";
+            // 
+            // label17
+            // 
+            label17.AutoSize = true;
+            label17.Location = new Point(3, 601);
+            label17.Name = "label17";
+            label17.Size = new Size(144, 20);
+            label17.TabIndex = 8;
+            label17.Text = "Окончание службы";
+            // 
+            // label13
+            // 
+            label13.AutoSize = true;
+            label13.Location = new Point(3, 549);
+            label13.Name = "label13";
+            label13.Size = new Size(118, 20);
+            label13.TabIndex = 7;
+            label13.Text = "Начало службы";
+            // 
+            // buttonAddMilitaryService
+            // 
+            buttonAddMilitaryService.Location = new Point(463, 558);
+            buttonAddMilitaryService.Name = "buttonAddMilitaryService";
+            buttonAddMilitaryService.Size = new Size(98, 43);
+            buttonAddMilitaryService.TabIndex = 5;
+            buttonAddMilitaryService.Text = "Создать";
+            buttonAddMilitaryService.UseVisualStyleBackColor = true;
+            buttonAddMilitaryService.Click += buttonAddMilitaryService_Click;
+            // 
+            // comboBoxStatus
+            // 
+            comboBoxStatus.FormattingEnabled = true;
+            comboBoxStatus.Location = new Point(463, 627);
+            comboBoxStatus.Name = "comboBoxStatus";
+            comboBoxStatus.Size = new Size(226, 28);
+            comboBoxStatus.TabIndex = 6;
+            // 
+            // comboBoxRank
+            // 
+            comboBoxRank.FormattingEnabled = true;
+            comboBoxRank.Location = new Point(235, 627);
+            comboBoxRank.Name = "comboBoxRank";
+            comboBoxRank.Size = new Size(222, 28);
+            comboBoxRank.TabIndex = 4;
+            // 
+            // textBoxSubdivision
+            // 
+            textBoxSubdivision.Location = new Point(235, 574);
+            textBoxSubdivision.Name = "textBoxSubdivision";
+            textBoxSubdivision.Size = new Size(222, 27);
+            textBoxSubdivision.TabIndex = 3;
+            // 
+            // dateTimePickerEnd
+            // 
+            dateTimePickerEnd.Location = new Point(3, 627);
+            dateTimePickerEnd.Name = "dateTimePickerEnd";
+            dateTimePickerEnd.Size = new Size(226, 27);
+            dateTimePickerEnd.TabIndex = 2;
+            // 
+            // dateTimePickerStart
+            // 
+            dateTimePickerStart.Location = new Point(3, 572);
+            dateTimePickerStart.Name = "dateTimePickerStart";
+            dateTimePickerStart.Size = new Size(226, 27);
+            dateTimePickerStart.TabIndex = 1;
+            // 
+            // dataGridView4
+            // 
+            dataGridView4.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dataGridView4.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView4.Location = new Point(3, 3);
+            dataGridView4.Name = "dataGridView4";
+            dataGridView4.RowHeadersWidth = 51;
+            dataGridView4.Size = new Size(686, 543);
+            dataGridView4.TabIndex = 0;
+            dataGridView4.SelectionChanged += dataGridView4_SelectionChanged;
             // 
             // UserForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1583, 721);
+            ClientSize = new Size(1707, 721);
             Controls.Add(panel3);
             Controls.Add(panel1);
             Name = "UserForm";
-            Text = "UserForm";
+            Text = "Сотрудник";
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ((System.ComponentModel.ISupportInitialize)dataGridView2).EndInit();
             panel1.ResumeLayout(false);
@@ -527,6 +689,9 @@
             tabPage2.ResumeLayout(false);
             tabPage2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView3).EndInit();
+            tabPage3.ResumeLayout(false);
+            tabPage3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)dataGridView4).EndInit();
             ResumeLayout(false);
         }
 
@@ -576,5 +741,20 @@
         private Label label15;
         private Label label14;
         private TabPage tabPage3;
+        private ComboBox comboBoxExamType;
+        private Label label11;
+        private DataGridView dataGridView4;
+        private DateTimePicker dateTimePickerStart;
+        private ComboBox comboBoxStatus;
+        private Button buttonAddMilitaryService;
+        private ComboBox comboBoxRank;
+        private TextBox textBoxSubdivision;
+        private DateTimePicker dateTimePickerEnd;
+        private Label label20;
+        private Label label19;
+        private Label label18;
+        private Label label17;
+        private Label label13;
+        private Button buttonSaveMilitaryService;
     }
 }

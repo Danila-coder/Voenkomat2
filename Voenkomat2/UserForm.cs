@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using System.Data.SQLite;
+using System.Windows.Forms.VisualStyles;
 
 namespace Voenkomat2
 {
@@ -25,40 +26,14 @@ namespace Voenkomat2
 
 
             FillComboBoxes();
-
             FillDefermentComboBox();
-
             LoadComboBoxes();
+            LoadRankComboBox();
+            LoadStatusComboBox();
         }
 
         private void ConnectToDatabase()
         {
-            //    try
-            //    {
-            //        // Укажите путь к вашей базе данных SQLite
-            //        string connectionString = "Data Source=Voenkomat.db;Version=3;";
-            //        sqliteConn = new SQLiteConnection(connectionString);
-            //        sqliteConn.Open();
-
-            //        // SQL-запрос для обновления статуса всех отсрочек
-            //        string updateQuery = @"
-            //    UPDATE Отсрочка
-            //    SET Статус = 
-            //        CASE
-            //            WHEN DATE('now') BETWEEN [Дата начала] AND [Дата окончания] THEN 'Активна'
-            //            ELSE 'Закрыта'
-            //        END
-            //";
-
-            //        // Выполняем запрос для обновления статусов
-            //        SQLiteCommand updateCommand = new SQLiteCommand(updateQuery, sqliteConn);
-            //        updateCommand.ExecuteNonQuery();
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        MessageBox.Show("Ошибка подключения или выполнения запроса: " + ex.Message);
-            //    }
-
             try
             {
                 // Укажите путь к вашей базе данных SQLite
@@ -92,7 +67,6 @@ namespace Voenkomat2
 
         }
 
-
         private void LoadData()
         {
             try
@@ -120,18 +94,22 @@ namespace Voenkomat2
         private void FillComboBoxes()
         {
             // Добавление значений в ComboBox для образования
-            comboBox1.Items.Add("Высшее");
+            comboBox1.Items.Add("Начальное");
             comboBox1.Items.Add("Среднее");
-            comboBox1.Items.Add("Незаконченное высшее");
             comboBox1.Items.Add("Среднее специальное");
+            comboBox1.Items.Add("Высшее");
+            comboBox1.Items.Add("Неоконченное высшее");
+            comboBox1.Items.Add("Магистратура");
+            comboBox1.Items.Add("Аспирантура");
 
             // Выбор первого элемента по умолчанию (если нужно)
             comboBox1.SelectedIndex = 0;
 
             // Добавление значений в ComboBox для статуса
+            comboBox2.Items.Add("На учёте");
             comboBox2.Items.Add("Служит");
-            comboBox2.Items.Add("Пенсионер");
-            comboBox2.Items.Add("Студент");
+            comboBox2.Items.Add("Запас");
+            comboBox2.Items.Add("Отсрочка");
 
             // Выбор первого элемента по умолчанию (если нужно)
             comboBox2.SelectedIndex = 0;
@@ -213,6 +191,7 @@ namespace Voenkomat2
             dataGridView1.RowPostPaint += new DataGridViewRowPostPaintEventHandler(DataGridView_RowPostPaint);
             dataGridView2.RowPostPaint += new DataGridViewRowPostPaintEventHandler(DataGridView_RowPostPaint);
             dataGridView3.RowPostPaint += new DataGridViewRowPostPaintEventHandler(DataGridView_RowPostPaint);
+            dataGridView4.RowPostPaint += new DataGridViewRowPostPaintEventHandler(DataGridView_RowPostPaint);
         }
 
         // Обработчик события RowPostPaint
@@ -345,11 +324,309 @@ namespace Voenkomat2
 
                     // Загружаем медосмотры для выбранного гражданина в DataGridView3
                     LoadMedicalExams(citizenId);
+
+                    // Загружаем cлужбу для выбранного гражданина в DataGridView4
+                    LoadMilitaryService(citizenId);
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Ошибка при обработке клика по ячейке: " + ex.Message);
+            }
+        }
+
+
+        private void LoadMilitaryService(int citizenId)
+        {
+            try
+            {
+                // SQL-запрос для получения всех данных о военной службе для выбранного гражданина
+                string query = @"
+                        SELECT [Военная служба].ID, [Военная служба].[Начало службы], [Военная служба].[Окончание службы], 
+                               [Военная служба].Подразделение, [Военная служба].Звание, [Военная служба].[Статус службы]
+                        FROM [Военная служба]
+                        WHERE [Военная служба].ID_Гражданина = @citizenId";
+
+                // Создаем команду SQLite
+                SQLiteCommand command = new SQLiteCommand(query, sqliteConn);
+
+                // Добавляем параметр для ID гражданина
+                command.Parameters.AddWithValue("@citizenId", citizenId);
+
+                // Создаем адаптер данных
+                SQLiteDataAdapter dataAdapter = new SQLiteDataAdapter(command);
+
+                // Создаем таблицу данных
+                DataTable dataTable = new DataTable();
+
+                // Заполняем таблицу данными
+                dataAdapter.Fill(dataTable);
+
+                // Привязываем результат к DataGridView
+                dataGridView4.DataSource = dataTable;
+
+                // Если нужно скрыть столбец ID (по желанию)
+                dataGridView4.Columns["ID"].Visible = false;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка при загрузке данных военной службы: " + ex.Message);
+            }
+        }
+
+        private void buttonAddMilitaryService_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Получаем данные из элементов управления
+                DateTime startDate = dateTimePickerStart.Value;  // Дата начала службы
+                DateTime endDate = dateTimePickerEnd.Value;      // Дата окончания службы
+                string subdivision = textBoxSubdivision.Text;    // Подразделение
+                string rank = comboBoxRank.SelectedItem?.ToString(); // Звание (из ComboBox)
+                string status = comboBoxStatus.SelectedItem?.ToString();  // Статус службы
+
+                // Проверка на корректность дат
+                if (endDate < startDate)
+                {
+                    MessageBox.Show("Дата окончания службы не может быть раньше даты начала службы.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Проверяем, что все обязательные поля заполнены
+                if (string.IsNullOrEmpty(subdivision) || string.IsNullOrEmpty(rank) || string.IsNullOrEmpty(status))
+                {
+                    MessageBox.Show("Пожалуйста, заполните все поля.");
+                    return;
+                }
+
+                // Получаем ID гражданина, для которого добавляется запись о военной службе
+                int selectedRowIndex = dataGridView1.SelectedCells[0].RowIndex; // Или как-то иначе получаем ID гражданина
+                DataGridViewRow selectedRow = dataGridView1.Rows[selectedRowIndex];
+                int citizenId = Convert.ToInt32(selectedRow.Cells["ID"].Value); // Получаем ID гражданина
+
+                // Шаг 1: Проверяем, есть ли активные отсрочки у гражданина
+                bool hasActiveDeferment = CheckActiveDeferments(citizenId);
+
+                if (hasActiveDeferment)
+                {
+                    // Если есть активная отсрочка, выводим сообщение и останавливаем выполнение
+                    MessageBox.Show("У гражданина есть активная отсрочка, нельзя добавлять запись о военной службе.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Шаг 2: Добавляем запись о военной службе
+                string query = @"
+        INSERT INTO [Военная служба] (ID_Гражданина, [Начало службы], [Окончание службы], Подразделение, Звание, [Статус службы])
+        VALUES (@citizenId, @startDate, @endDate, @subdivision, @rank, @status)";
+
+                SQLiteCommand command = new SQLiteCommand(query, sqliteConn);
+                command.Parameters.AddWithValue("@citizenId", citizenId);
+                command.Parameters.AddWithValue("@startDate", startDate.ToString("dd-MM-yyyy"));
+                command.Parameters.AddWithValue("@endDate", endDate.ToString("dd-MM-yyyy"));
+                command.Parameters.AddWithValue("@subdivision", subdivision);
+                command.Parameters.AddWithValue("@rank", rank);
+                command.Parameters.AddWithValue("@status", status);
+
+                // Выполняем команду для добавления данных
+                command.ExecuteNonQuery();
+
+                // Перезагружаем данные для DataGridView
+                LoadMilitaryService(citizenId);
+
+                // Очищаем элементы управления после добавления записи
+                dateTimePickerStart.Value = DateTime.Now;
+                dateTimePickerEnd.Value = DateTime.Now;
+                textBoxSubdivision.Clear();
+                comboBoxRank.SelectedIndex = 0;  // Сбросить на первый элемент
+                comboBoxStatus.SelectedIndex = 0;  // Сбросить на первый элемент
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка при добавлении записи о военной службе: " + ex.Message);
+            }
+        }
+
+        private bool CheckActiveDeferments(int citizenId)
+        {
+            try
+            {
+                // SQL запрос для проверки наличия активной отсрочки
+                string query = @"
+        SELECT COUNT(*) 
+        FROM Отсрочка 
+        WHERE ID_Гражданина = @citizenId 
+        AND [Дата начала] <= @currentDate 
+        AND [Дата окончания] >= @currentDate 
+        AND Статус = 'Активна'";  // Проверка на активную отсрочку
+
+                SQLiteCommand command = new SQLiteCommand(query, sqliteConn);
+                command.Parameters.AddWithValue("@citizenId", citizenId);
+                command.Parameters.AddWithValue("@currentDate", DateTime.Now);  // Текущая дата
+
+                int activeDefermentCount = Convert.ToInt32(command.ExecuteScalar()); // Получаем количество активных отсрочек
+
+                return activeDefermentCount > 0;  // Если есть хотя бы одна активная отсрочка, возвращаем true
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка при проверке отсрочек: " + ex.Message);
+                return false;
+            }
+        }
+
+        private void LoadRankComboBox()
+        {
+            try
+            {
+                // Очищаем текущие элементы
+                comboBoxRank.Items.Clear();
+
+                // Добавляем значения для звания
+                comboBoxRank.Items.Add("Рядовой");
+                comboBoxRank.Items.Add("Сержант");
+                comboBoxRank.Items.Add("Лейтенант");
+                comboBoxRank.Items.Add("Капитан");
+                comboBoxRank.Items.Add("Майор");
+                comboBoxRank.Items.Add("Полковник");
+                comboBoxRank.Items.Add("Генерал");
+
+                // Устанавливаем первый элемент по умолчанию
+                if (comboBoxRank.Items.Count > 0)
+                {
+                    comboBoxRank.SelectedIndex = 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка при загрузке званий: " + ex.Message);
+            }
+        }
+
+        private void LoadStatusComboBox()
+        {
+            try
+            {
+                // Очищаем текущие элементы
+                comboBoxStatus.Items.Clear();
+
+                // Добавляем значения для статуса службы
+                comboBoxStatus.Items.Add("Активная служба");
+                comboBoxStatus.Items.Add("Демобилизован");
+                comboBoxStatus.Items.Add("Арестован");
+                comboBoxStatus.Items.Add("Отпуск");
+
+                // Устанавливаем первый элемент по умолчанию
+                if (comboBoxStatus.Items.Count > 0)
+                {
+                    comboBoxStatus.SelectedIndex = 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка при загрузке статусов службы: " + ex.Message);
+            }
+        }
+
+        private int selectedRecordId;
+
+        private void dataGridView4_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dataGridView4.SelectedRows.Count > 0)
+            {
+                // Получаем данные выбранной строки
+                DataGridViewRow selectedRow = dataGridView4.SelectedRows[0];
+
+                // Загружаем данные в элементы управления (ComboBox, TextBox)
+                textBoxSubdivision.Text = selectedRow.Cells["Подразделение"].Value.ToString();
+                comboBoxRank.SelectedItem = selectedRow.Cells["Звание"].Value.ToString();
+                comboBoxStatus.SelectedItem = selectedRow.Cells["Статус службы"].Value.ToString();
+
+                // Сохраняем ID записи, чтобы потом использовать его для обновления
+                selectedRecordId = Convert.ToInt32(selectedRow.Cells["ID"].Value);
+
+                // Запрещаем редактирование дат (не даём пользователю изменять их)
+                dateTimePickerStart.Value = Convert.ToDateTime(selectedRow.Cells["Начало службы"].Value);
+                dateTimePickerEnd.Value = Convert.ToDateTime(selectedRow.Cells["Окончание службы"].Value);
+
+                // Можно оставить датам статус "Только для чтения"
+                dateTimePickerStart.Enabled = false;
+                dateTimePickerEnd.Enabled = false;
+            }
+        }
+
+        private void buttonSaveMilitaryService_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Получаем данные из элементов управления
+                DateTime startDate = dateTimePickerStart.Value;
+                DateTime endDate = dateTimePickerEnd.Value;
+                string subdivision = textBoxSubdivision.Text;
+                string rank = comboBoxRank.SelectedItem?.ToString();
+                string status = comboBoxStatus.SelectedItem?.ToString();
+
+                // Проверка на корректность дат
+                if (endDate < startDate)
+                {
+                    MessageBox.Show("Дата окончания службы не может быть раньше даты начала службы.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Проверяем, что все обязательные поля заполнены
+                if (string.IsNullOrEmpty(subdivision) || string.IsNullOrEmpty(rank) || string.IsNullOrEmpty(status))
+                {
+                    MessageBox.Show("Пожалуйста, заполните все поля.");
+                    return;
+                }
+
+                // SQL-запрос для обновления данных в таблице "Военная служба"
+                string query = @"
+        UPDATE [Военная служба]
+        SET Подразделение = @subdivision,
+            Звание = @rank,
+            [Статус службы] = @status
+        WHERE ID = @recordId";
+
+                // Создаем команду
+                SQLiteCommand command = new SQLiteCommand(query, sqliteConn);
+
+                // Добавляем параметры в команду
+                command.Parameters.AddWithValue("@subdivision", subdivision);
+                command.Parameters.AddWithValue("@rank", rank);
+                command.Parameters.AddWithValue("@status", status);
+                command.Parameters.AddWithValue("@recordId", selectedRecordId); // ID записи для обновления
+
+                // Выполняем команду для обновления данных
+                command.ExecuteNonQuery();
+
+                // Обновляем только текущую запись в DataGridView (не все данные о гражданине)
+                UpdateRowInDataGridView(selectedRecordId);
+
+                // Очищаем элементы управления после сохранения
+                textBoxSubdivision.Clear();
+                comboBoxRank.SelectedIndex = 0;
+                comboBoxStatus.SelectedIndex = 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка при сохранении записи о военной службе: " + ex.Message);
+            }
+        }
+
+        private void UpdateRowInDataGridView(int recordId)
+        {
+            // Найдите строку по ID и обновите её
+            foreach (DataGridViewRow row in dataGridView4.Rows)
+            {
+                if (Convert.ToInt32(row.Cells["ID"].Value) == recordId)
+                {
+                    row.Cells["Подразделение"].Value = textBoxSubdivision.Text;
+                    row.Cells["Звание"].Value = comboBoxRank.SelectedItem?.ToString();
+                    row.Cells["Статус службы"].Value = comboBoxStatus.SelectedItem?.ToString();
+                    row.Cells["Начало службы"].Value = dateTimePickerStart.Value.ToString("dd-MM-yyyy");
+                    row.Cells["Окончание службы"].Value = dateTimePickerEnd.Value.ToString("dd-MM-yyyy");
+                    break;
+                }
             }
         }
 
@@ -539,10 +816,14 @@ namespace Voenkomat2
         {
             try
             {
-                string query = "SELECT Медосмотр.ID, Медосмотр.[Дата осмотра], Медосмотр.Результат, Врач.ФИО AS Врач " +
-                       "FROM Медосмотр " +
-                       "JOIN Врач ON Медосмотр.Врач = Врач.ID " +
-                       "WHERE Медосмотр.ID_Гражданина = @citizenId";
+                // SQL-запрос для получения всех данных медосмотра с включением названия вида осмотра
+                string query = @"
+                                SELECT Медосмотр.ID, [Вид осмотра].Наименование AS [Вид осмотра], Медосмотр.[Дата осмотра], Медосмотр.Результат, Врач.ФИО AS Врач
+                                FROM Медосмотр
+                                JOIN Врач ON Медосмотр.Врач = Врач.ID
+                                JOIN [Вид осмотра] ON Медосмотр.[Вид осмотра] = [Вид осмотра].ID
+                                WHERE Медосмотр.ID_Гражданина = @citizenId";
+
 
                 // Создаем команду SQLite
                 SQLiteCommand command = new SQLiteCommand(query, sqliteConn);
@@ -585,6 +866,17 @@ namespace Voenkomat2
                 comboBoxDoctor.DataSource = doctorTable;
                 comboBoxDoctor.DisplayMember = "ФИО";  // Показывать ФИО врача
                 comboBoxDoctor.ValueMember = "ID";     // Использовать ID врача для отправки на сервер
+
+                // Запрос для получения всех видов осмотра
+                string examTypeQuery = "SELECT ID, Наименование FROM [Вид осмотра]";
+                SQLiteDataAdapter examTypeAdapter = new SQLiteDataAdapter(examTypeQuery, sqliteConn);
+                DataTable examTypeTable = new DataTable();
+                examTypeAdapter.Fill(examTypeTable);
+
+                // Заполнение комбобокса Вид осмотра
+                comboBoxExamType.DataSource = examTypeTable;
+                comboBoxExamType.DisplayMember = "Наименование";  // Показывать наименование вида осмотра
+                comboBoxExamType.ValueMember = "ID";              // Использовать ID вида осмотра для отправки в базу данных
             }
             catch (Exception ex)
             {
@@ -602,6 +894,9 @@ namespace Voenkomat2
                 string result = textBoxResult.Text;
                 int citizenId = 1; // Пример ID гражданина, этот параметр можно получить из выбранной строки DataGridView1
 
+                // Получаем ID выбранного вида осмотра из комбобокса
+                int examTypeId = Convert.ToInt32(comboBoxExamType.SelectedValue); // ID вида осмотра
+
                 // Форматируем дату для вставки в базу данных
                 string formattedDate = examDate.ToString("dd-MM-yyyy");
 
@@ -614,6 +909,7 @@ namespace Voenkomat2
 
                 // Добавляем параметры в команду
                 command.Parameters.AddWithValue("@citizenId", citizenId);
+                command.Parameters.AddWithValue("@examTypeId", examTypeId);  // Добавляем ID вида осмотра
                 command.Parameters.AddWithValue("@examDate", formattedDate);  // Используем отформатированную дату
                 command.Parameters.AddWithValue("@result", result);
                 command.Parameters.AddWithValue("@doctorId", doctorId);
@@ -629,7 +925,5 @@ namespace Voenkomat2
                 MessageBox.Show("Ошибка при добавлении записи медосмотра: " + ex.Message);
             }
         }
-
-
     }
 }

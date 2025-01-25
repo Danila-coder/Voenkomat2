@@ -4,7 +4,9 @@ namespace Voenkomat2
     {
         // Учетные данные
         private const string userUsername = "user";
-        private const string userPassword = "user";
+        private const string userPassword = "user123";
+        private const string voenVoenname = "voen";
+        private const string voenPassword = "voen123";
 
         public Form1()
         {
@@ -20,6 +22,16 @@ namespace Voenkomat2
             {
                 MessageBox.Show("Авторизация успешна!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 UserForm mainForm = new UserForm();
+                mainForm.Show();
+                this.Hide();
+
+                // Если хотите завершить приложение при закрытии второй формы
+                mainForm.FormClosed += (s, args) => Application.Exit();
+            }
+            else if (username == voenVoenname && password == voenPassword)
+            {
+                MessageBox.Show("Авторизация успешна!", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                VoenForm mainForm = new VoenForm();
                 mainForm.Show();
                 this.Hide();
 
