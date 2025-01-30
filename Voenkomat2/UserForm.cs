@@ -43,17 +43,16 @@ namespace Voenkomat2
 
                 // SQL-запрос для обновления статуса всех отсрочек
                 string updateQuery = @"
-        UPDATE Отсрочка
-        SET Статус = 
-            CASE 
-                WHEN DATE('now') BETWEEN 
-                    strftime('%Y-%m-%d', substr([Дата начала], 7, 4) || '-' || substr([Дата начала], 4, 2) || '-' || substr([Дата начала], 1, 2)) 
-                    AND 
-                    strftime('%Y-%m-%d', substr([Дата окончания], 7, 4) || '-' || substr([Дата окончания], 4, 2) || '-' || substr([Дата окончания], 1, 2)) 
-                THEN 'Активна'
-                ELSE 'Закрыта'
-            END
-    ";
+                                        UPDATE Отсрочка
+                                        SET Статус = 
+                                            CASE 
+                                                WHEN DATE('now') BETWEEN 
+                                                    strftime('%Y-%m-%d', substr([Дата начала], 7, 4) || '-' || substr([Дата начала], 4, 2) || '-' || substr([Дата начала], 1, 2)) 
+                                                    AND 
+                                                    strftime('%Y-%m-%d', substr([Дата окончания], 7, 4) || '-' || substr([Дата окончания], 4, 2) || '-' || substr([Дата окончания], 1, 2)) 
+                                                THEN 'Активна'
+                                                ELSE 'Закрыта'
+                                            END";
 
                 // Выполняем запрос для обновления статусов
                 SQLiteCommand updateCommand = new SQLiteCommand(updateQuery, sqliteConn);
@@ -80,9 +79,9 @@ namespace Voenkomat2
 
                 // Заполнение DataGridView данными
                 dataGridView1.DataSource = dataTable;
-
-                // Скрываем столбец ID (если не нужно его показывать)
                 dataGridView1.Columns["ID"].Visible = false;
+
+                dataGridView1.ClearSelection();
             }
             catch (Exception ex)
             {
@@ -177,6 +176,8 @@ namespace Voenkomat2
 
                 // Сбросить дату на текущую
                 dateTimePicker1.Value = DateTime.Now;
+
+                MessageBox.Show("Запись успешно создана!");
             }
             catch (Exception ex)
             {
@@ -376,6 +377,12 @@ namespace Voenkomat2
 
         private void buttonAddMilitaryService_Click(object sender, EventArgs e)
         {
+            if (dataGridView1.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Пожалуйста, выберите гражданина для создания службы.");
+                return;
+            }
+
             try
             {
                 // Получаем данные из элементов управления
@@ -416,8 +423,8 @@ namespace Voenkomat2
 
                 // Шаг 2: Добавляем запись о военной службе
                 string query = @"
-        INSERT INTO [Военная служба] (ID_Гражданина, [Начало службы], [Окончание службы], Подразделение, Звание, [Статус службы])
-        VALUES (@citizenId, @startDate, @endDate, @subdivision, @rank, @status)";
+                                INSERT INTO [Военная служба] (ID_Гражданина, [Начало службы], [Окончание службы], Подразделение, Звание, [Статус службы])
+                                VALUES (@citizenId, @startDate, @endDate, @subdivision, @rank, @status)";
 
                 SQLiteCommand command = new SQLiteCommand(query, sqliteConn);
                 command.Parameters.AddWithValue("@citizenId", citizenId);
@@ -452,12 +459,12 @@ namespace Voenkomat2
             {
                 // SQL запрос для проверки наличия активной отсрочки
                 string query = @"
-        SELECT COUNT(*) 
-        FROM Отсрочка 
-        WHERE ID_Гражданина = @citizenId 
-        AND [Дата начала] <= @currentDate 
-        AND [Дата окончания] >= @currentDate 
-        AND Статус = 'Активна'";  // Проверка на активную отсрочку
+                                SELECT COUNT(*) 
+                                FROM Отсрочка 
+                                WHERE ID_Гражданина = @citizenId 
+                                AND [Дата начала] <= @currentDate 
+                                AND [Дата окончания] >= @currentDate 
+                                AND Статус = 'Активна'";  // Проверка на активную отсрочку
 
                 SQLiteCommand command = new SQLiteCommand(query, sqliteConn);
                 command.Parameters.AddWithValue("@citizenId", citizenId);
@@ -581,11 +588,11 @@ namespace Voenkomat2
 
                 // SQL-запрос для обновления данных в таблице "Военная служба"
                 string query = @"
-        UPDATE [Военная служба]
-        SET Подразделение = @subdivision,
-            Звание = @rank,
-            [Статус службы] = @status
-        WHERE ID = @recordId";
+                                UPDATE [Военная служба]
+                                SET Подразделение = @subdivision,
+                                    Звание = @rank,
+                                    [Статус службы] = @status
+                                WHERE ID = @recordId";
 
                 // Создаем команду
                 SQLiteCommand command = new SQLiteCommand(query, sqliteConn);
@@ -723,6 +730,12 @@ namespace Voenkomat2
 
         private void buttonAddDeferment_Click(object sender, EventArgs e)
         {
+            if (dataGridView1.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Пожалуйста, выберите гражданина для создания отсрочки.");
+                return;
+            }
+
             try
             {
                 // Получаем данные из элементов управления
@@ -886,16 +899,63 @@ namespace Voenkomat2
 
         private void buttonAddExam_Click(object sender, EventArgs e)
         {
+            //try
+            //{
+            //    // Получаем значения из комбобоксов и текстового поля
+            //    int doctorId = Convert.ToInt32(comboBoxDoctor.SelectedValue);      // Преобразуем в int
+            //    DateTime examDate = dateTimePickerExamDate.Value;
+            //    string result = textBoxResult.Text;
+            //    int citizenId = 1; // Пример ID гражданина, этот параметр можно получить из выбранной строки DataGridView1
+
+            //    // Получаем ID выбранного вида осмотра из комбобокса
+            //    int examTypeId = Convert.ToInt32(comboBoxExamType.SelectedValue); // ID вида осмотра
+
+            //    // Форматируем дату для вставки в базу данных
+            //    string formattedDate = examDate.ToString("dd-MM-yyyy");
+
+            //    // SQL запрос на добавление новой записи в таблицу Медосмотр
+            //    string query = "INSERT INTO Медосмотр (ID_Гражданина, [Вид осмотра], [Дата осмотра], Результат, Врач) " +
+            //                   "VALUES (@citizenId, @examTypeId, @examDate, @result, @doctorId)";
+
+            //    // Создаем команду SQLite
+            //    SQLiteCommand command = new SQLiteCommand(query, sqliteConn);
+
+            //    // Добавляем параметры в команду
+            //    command.Parameters.AddWithValue("@citizenId", citizenId);
+            //    command.Parameters.AddWithValue("@examTypeId", examTypeId);  // Добавляем ID вида осмотра
+            //    command.Parameters.AddWithValue("@examDate", formattedDate);  // Используем отформатированную дату
+            //    command.Parameters.AddWithValue("@result", result);
+            //    command.Parameters.AddWithValue("@doctorId", doctorId);
+
+            //    // Выполняем команду
+            //    command.ExecuteNonQuery();
+
+            //    // Перезагружаем данные для DataGridView3
+            //    LoadMedicalExams(citizenId);
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show("Ошибка при добавлении записи медосмотра: " + ex.Message);
+            //}
+
             try
             {
+                // Получаем ID гражданина из выбранной строки DataGridView1
+                if (dataGridView1.SelectedRows.Count == 0)
+                {
+                    MessageBox.Show("Пожалуйста, выберите гражданина для создания медосмотра.");
+                    return;
+                }
+
+                int selectedRowIndex = dataGridView1.SelectedCells[0].RowIndex;
+                DataGridViewRow selectedRow = dataGridView1.Rows[selectedRowIndex];
+                int citizenId = Convert.ToInt32(selectedRow.Cells["ID"].Value); // Получаем ID гражданина
+
                 // Получаем значения из комбобоксов и текстового поля
-                int doctorId = Convert.ToInt32(comboBoxDoctor.SelectedValue);      // Преобразуем в int
+                int doctorId = Convert.ToInt32(comboBoxDoctor.SelectedValue);
                 DateTime examDate = dateTimePickerExamDate.Value;
                 string result = textBoxResult.Text;
-                int citizenId = 1; // Пример ID гражданина, этот параметр можно получить из выбранной строки DataGridView1
-
-                // Получаем ID выбранного вида осмотра из комбобокса
-                int examTypeId = Convert.ToInt32(comboBoxExamType.SelectedValue); // ID вида осмотра
+                int examTypeId = Convert.ToInt32(comboBoxExamType.SelectedValue);
 
                 // Форматируем дату для вставки в базу данных
                 string formattedDate = examDate.ToString("dd-MM-yyyy");
@@ -909,8 +969,8 @@ namespace Voenkomat2
 
                 // Добавляем параметры в команду
                 command.Parameters.AddWithValue("@citizenId", citizenId);
-                command.Parameters.AddWithValue("@examTypeId", examTypeId);  // Добавляем ID вида осмотра
-                command.Parameters.AddWithValue("@examDate", formattedDate);  // Используем отформатированную дату
+                command.Parameters.AddWithValue("@examTypeId", examTypeId);
+                command.Parameters.AddWithValue("@examDate", formattedDate);
                 command.Parameters.AddWithValue("@result", result);
                 command.Parameters.AddWithValue("@doctorId", doctorId);
 
@@ -925,5 +985,125 @@ namespace Voenkomat2
                 MessageBox.Show("Ошибка при добавлении записи медосмотра: " + ex.Message);
             }
         }
+
+        private void buttonDeleteDeferment_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (dataGridView2.SelectedRows.Count == 0)
+                {
+                    MessageBox.Show("Пожалуйста, выберите отсрочку для удаления.");
+                    return;
+                }
+
+                int selectedRowIndex = dataGridView2.SelectedCells[0].RowIndex;
+                DataGridViewRow selectedRow = dataGridView2.Rows[selectedRowIndex];
+                int defermentId = Convert.ToInt32(selectedRow.Cells["ID"].Value);
+
+                // Подтверждение удаления
+                var result = MessageBox.Show("Вы уверены, что хотите удалить эту отсрочку?", "Подтверждение удаления", MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
+                {
+                    // Запрос на удаление отсрочки
+                    string query = "DELETE FROM Отсрочка WHERE ID = @defermentId";
+                    SQLiteCommand command = new SQLiteCommand(query, sqliteConn);
+                    command.Parameters.AddWithValue("@defermentId", defermentId);
+                    command.ExecuteNonQuery();
+
+                    // Перезагружаем отсрочки после удаления
+                    int citizenId = Convert.ToInt32(dataGridView1.SelectedCells[0].Value); // Получаем ID гражданина для перезагрузки отсрочек
+                    LoadDeferments(citizenId);
+
+                    MessageBox.Show("Отсрочка успешно удалена.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка при удалении отсрочки: " + ex.Message);
+            }
+        }
+
+        private void buttonDeleteExam_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (dataGridView3.SelectedRows.Count == 0)
+                {
+                    MessageBox.Show("Пожалуйста, выберите запись медосмотра для удаления.");
+                    return;
+                }
+
+                int selectedRowIndex = dataGridView3.SelectedCells[0].RowIndex;
+                DataGridViewRow selectedRow = dataGridView3.Rows[selectedRowIndex];
+                int examId = Convert.ToInt32(selectedRow.Cells["ID"].Value);
+
+                // Подтверждение удаления
+                var result = MessageBox.Show("Вы уверены, что хотите удалить эту запись медосмотра?", "Подтверждение удаления", MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
+                {
+                    // Запрос на удаление записи медосмотра
+                    string query = "DELETE FROM Медосмотр WHERE ID = @examId";
+                    SQLiteCommand command = new SQLiteCommand(query, sqliteConn);
+                    command.Parameters.AddWithValue("@examId", examId);
+                    command.ExecuteNonQuery();
+
+                    // Перезагружаем медосмотры после удаления
+                    int citizenId = Convert.ToInt32(dataGridView1.SelectedCells[0].Value); // Получаем ID гражданина для перезагрузки медосмотров
+                    LoadMedicalExams(citizenId);
+
+                    MessageBox.Show("Запись медосмотра успешно удалена.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка при удалении записи медосмотра: " + ex.Message);
+            }
+        }
+
+        private void buttonDeleteMilitaryService_Click(object sender, EventArgs e)
+        {
+            if (dataGridView4.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Пожалуйста, выберите запись о военной службе для удаления.");
+                return;
+            }
+
+            try
+            {
+                // Получаем ID выбранной записи
+                DataGridViewRow selectedRow = dataGridView4.SelectedRows[0];
+                int recordId = Convert.ToInt32(selectedRow.Cells["ID"].Value); // Получаем ID записи
+
+                // Подтверждение удаления
+                var result = MessageBox.Show("Вы уверены, что хотите удалить эту запись о военной службе?", "Подтверждение удаления", MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
+                {
+                    // SQL-запрос для удаления записи из таблицы "Военная служба"
+                    string query = "DELETE FROM [Военная служба] WHERE ID = @recordId";
+
+                    // Создаем команду
+                    SQLiteCommand command = new SQLiteCommand(query, sqliteConn);
+                    command.Parameters.AddWithValue("@recordId", recordId); // Передаем ID записи в запрос
+
+                    // Выполняем команду удаления
+                    command.ExecuteNonQuery();
+
+                    // Получаем ID гражданина из dataGridView1, если это не предусмотрено в dataGridView4
+                    int citizenId = Convert.ToInt32(dataGridView1.SelectedCells[0].Value); // Получаем ID гражданина из dataGridView1
+
+                    // Перезагружаем данные для DataGridView (после удаления записи)
+                    LoadMilitaryService(citizenId); // Загружаем обновленные данные
+
+                    MessageBox.Show("Запись о военной службе успешно удалена.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка при удалении записи о военной службе: " + ex.Message);
+            }
+        }
+
+
+
     }
 }

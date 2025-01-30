@@ -59,11 +59,14 @@
             label12 = new Label();
             panel1 = new Panel();
             panel2 = new Panel();
+            buttonDeleteMilitaryService = new Button();
             panel3 = new Panel();
             tabControl1 = new TabControl();
             tabPage1 = new TabPage();
+            buttonDeleteDeferment = new Button();
             tabPage2 = new TabPage();
             label11 = new Label();
+            buttonDeleteExam = new Button();
             comboBoxExamType = new ComboBox();
             label16 = new Label();
             label15 = new Label();
@@ -288,7 +291,7 @@
             dataGridView2.Location = new Point(3, 3);
             dataGridView2.Name = "dataGridView2";
             dataGridView2.RowHeadersWidth = 51;
-            dataGridView2.Size = new Size(683, 595);
+            dataGridView2.Size = new Size(683, 575);
             dataGridView2.TabIndex = 21;
             // 
             // comboBox3
@@ -301,7 +304,7 @@
             // 
             // dateTimePicker2
             // 
-            dateTimePicker2.Location = new Point(6, 625);
+            dateTimePicker2.Location = new Point(6, 624);
             dateTimePicker2.Name = "dateTimePicker2";
             dateTimePicker2.Size = new Size(182, 27);
             dateTimePicker2.TabIndex = 23;
@@ -315,9 +318,9 @@
             // 
             // buttonAddDeferment
             // 
-            buttonAddDeferment.Location = new Point(562, 604);
+            buttonAddDeferment.Location = new Point(562, 588);
             buttonAddDeferment.Name = "buttonAddDeferment";
-            buttonAddDeferment.Size = new Size(124, 48);
+            buttonAddDeferment.Size = new Size(124, 29);
             buttonAddDeferment.TabIndex = 26;
             buttonAddDeferment.Text = "Создать";
             buttonAddDeferment.UseVisualStyleBackColor = true;
@@ -326,7 +329,7 @@
             // label9
             // 
             label9.AutoSize = true;
-            label9.Location = new Point(6, 602);
+            label9.Location = new Point(6, 601);
             label9.Name = "label9";
             label9.Size = new Size(94, 20);
             label9.TabIndex = 27;
@@ -388,6 +391,16 @@
             panel2.Size = new Size(396, 207);
             panel2.TabIndex = 32;
             // 
+            // buttonDeleteMilitaryService
+            // 
+            buttonDeleteMilitaryService.Location = new Point(567, 592);
+            buttonDeleteMilitaryService.Name = "buttonDeleteMilitaryService";
+            buttonDeleteMilitaryService.Size = new Size(122, 29);
+            buttonDeleteMilitaryService.TabIndex = 20;
+            buttonDeleteMilitaryService.Text = "Удалить";
+            buttonDeleteMilitaryService.UseVisualStyleBackColor = true;
+            buttonDeleteMilitaryService.Click += buttonDeleteMilitaryService_Click;
+            // 
             // panel3
             // 
             panel3.BorderStyle = BorderStyle.Fixed3D;
@@ -410,6 +423,7 @@
             // 
             // tabPage1
             // 
+            tabPage1.Controls.Add(buttonDeleteDeferment);
             tabPage1.Controls.Add(dateTimePicker2);
             tabPage1.Controls.Add(dataGridView2);
             tabPage1.Controls.Add(buttonAddDeferment);
@@ -426,9 +440,20 @@
             tabPage1.Text = "Отсрочки";
             tabPage1.UseVisualStyleBackColor = true;
             // 
+            // buttonDeleteDeferment
+            // 
+            buttonDeleteDeferment.Location = new Point(562, 622);
+            buttonDeleteDeferment.Name = "buttonDeleteDeferment";
+            buttonDeleteDeferment.Size = new Size(124, 29);
+            buttonDeleteDeferment.TabIndex = 20;
+            buttonDeleteDeferment.Text = "Удалить";
+            buttonDeleteDeferment.UseVisualStyleBackColor = true;
+            buttonDeleteDeferment.Click += buttonDeleteDeferment_Click;
+            // 
             // tabPage2
             // 
             tabPage2.Controls.Add(label11);
+            tabPage2.Controls.Add(buttonDeleteExam);
             tabPage2.Controls.Add(comboBoxExamType);
             tabPage2.Controls.Add(label16);
             tabPage2.Controls.Add(label15);
@@ -454,6 +479,16 @@
             label11.Size = new Size(98, 20);
             label11.TabIndex = 32;
             label11.Text = "Вид осмотра";
+            // 
+            // buttonDeleteExam
+            // 
+            buttonDeleteExam.Location = new Point(562, 604);
+            buttonDeleteExam.Name = "buttonDeleteExam";
+            buttonDeleteExam.Size = new Size(124, 48);
+            buttonDeleteExam.TabIndex = 31;
+            buttonDeleteExam.Text = "Удалить";
+            buttonDeleteExam.UseVisualStyleBackColor = true;
+            buttonDeleteExam.Click += buttonDeleteExam_Click;
             // 
             // comboBoxExamType
             // 
@@ -483,7 +518,7 @@
             // 
             // buttonAddExam
             // 
-            buttonAddExam.Location = new Point(562, 604);
+            buttonAddExam.Location = new Point(562, 552);
             buttonAddExam.Name = "buttonAddExam";
             buttonAddExam.Size = new Size(124, 48);
             buttonAddExam.TabIndex = 1;
@@ -534,6 +569,7 @@
             // 
             // tabPage3
             // 
+            tabPage3.Controls.Add(buttonDeleteMilitaryService);
             tabPage3.Controls.Add(buttonSaveMilitaryService);
             tabPage3.Controls.Add(label20);
             tabPage3.Controls.Add(label19);
@@ -556,7 +592,7 @@
             // 
             // buttonSaveMilitaryService
             // 
-            buttonSaveMilitaryService.Location = new Point(567, 558);
+            buttonSaveMilitaryService.Location = new Point(567, 543);
             buttonSaveMilitaryService.Name = "buttonSaveMilitaryService";
             buttonSaveMilitaryService.Size = new Size(122, 43);
             buttonSaveMilitaryService.TabIndex = 12;
@@ -611,7 +647,7 @@
             // 
             // buttonAddMilitaryService
             // 
-            buttonAddMilitaryService.Location = new Point(463, 558);
+            buttonAddMilitaryService.Location = new Point(463, 543);
             buttonAddMilitaryService.Name = "buttonAddMilitaryService";
             buttonAddMilitaryService.Size = new Size(98, 43);
             buttonAddMilitaryService.TabIndex = 5;
@@ -663,7 +699,7 @@
             dataGridView4.Location = new Point(3, 3);
             dataGridView4.Name = "dataGridView4";
             dataGridView4.RowHeadersWidth = 51;
-            dataGridView4.Size = new Size(686, 543);
+            dataGridView4.Size = new Size(686, 534);
             dataGridView4.TabIndex = 0;
             dataGridView4.SelectionChanged += dataGridView4_SelectionChanged;
             // 
@@ -756,5 +792,8 @@
         private Label label17;
         private Label label13;
         private Button buttonSaveMilitaryService;
+        private Button buttonDeleteDeferment;
+        private Button buttonDeleteExam;
+        private Button buttonDeleteMilitaryService;
     }
 }
