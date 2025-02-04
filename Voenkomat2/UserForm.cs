@@ -417,7 +417,7 @@ namespace Voenkomat2
                 if (hasActiveDeferment)
                 {
                     // Если есть активная отсрочка, выводим сообщение и останавливаем выполнение
-                    MessageBox.Show("У гражданина есть активная отсрочка, нельзя добавлять запись о военной службе.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("У гражданина есть активная отсрочка, нельзя добавить запись.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -899,45 +899,6 @@ namespace Voenkomat2
 
         private void buttonAddExam_Click(object sender, EventArgs e)
         {
-            //try
-            //{
-            //    // Получаем значения из комбобоксов и текстового поля
-            //    int doctorId = Convert.ToInt32(comboBoxDoctor.SelectedValue);      // Преобразуем в int
-            //    DateTime examDate = dateTimePickerExamDate.Value;
-            //    string result = textBoxResult.Text;
-            //    int citizenId = 1; // Пример ID гражданина, этот параметр можно получить из выбранной строки DataGridView1
-
-            //    // Получаем ID выбранного вида осмотра из комбобокса
-            //    int examTypeId = Convert.ToInt32(comboBoxExamType.SelectedValue); // ID вида осмотра
-
-            //    // Форматируем дату для вставки в базу данных
-            //    string formattedDate = examDate.ToString("dd-MM-yyyy");
-
-            //    // SQL запрос на добавление новой записи в таблицу Медосмотр
-            //    string query = "INSERT INTO Медосмотр (ID_Гражданина, [Вид осмотра], [Дата осмотра], Результат, Врач) " +
-            //                   "VALUES (@citizenId, @examTypeId, @examDate, @result, @doctorId)";
-
-            //    // Создаем команду SQLite
-            //    SQLiteCommand command = new SQLiteCommand(query, sqliteConn);
-
-            //    // Добавляем параметры в команду
-            //    command.Parameters.AddWithValue("@citizenId", citizenId);
-            //    command.Parameters.AddWithValue("@examTypeId", examTypeId);  // Добавляем ID вида осмотра
-            //    command.Parameters.AddWithValue("@examDate", formattedDate);  // Используем отформатированную дату
-            //    command.Parameters.AddWithValue("@result", result);
-            //    command.Parameters.AddWithValue("@doctorId", doctorId);
-
-            //    // Выполняем команду
-            //    command.ExecuteNonQuery();
-
-            //    // Перезагружаем данные для DataGridView3
-            //    LoadMedicalExams(citizenId);
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show("Ошибка при добавлении записи медосмотра: " + ex.Message);
-            //}
-
             try
             {
                 // Получаем ID гражданина из выбранной строки DataGridView1
@@ -1102,8 +1063,5 @@ namespace Voenkomat2
                 MessageBox.Show("Ошибка при удалении записи о военной службе: " + ex.Message);
             }
         }
-
-
-
     }
 }

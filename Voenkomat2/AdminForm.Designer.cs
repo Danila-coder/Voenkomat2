@@ -43,6 +43,7 @@
             buttonAdd.TabIndex = 0;
             buttonAdd.Text = "Добавить";
             buttonAdd.UseVisualStyleBackColor = true;
+            buttonAdd.Click += buttonAdd_Click;
             // 
             // buttonDelete
             // 
@@ -52,6 +53,7 @@
             buttonDelete.TabIndex = 1;
             buttonDelete.Text = "Удалить";
             buttonDelete.UseVisualStyleBackColor = true;
+            buttonDelete.Click += buttonDelete_Click;
             // 
             // comboBox
             // 
